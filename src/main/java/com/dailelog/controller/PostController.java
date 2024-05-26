@@ -1,7 +1,6 @@
 package com.dailelog.controller;
 
-import com.dailelog.domain.Post;
-import com.dailelog.exception.InvalidRequest;
+import com.dailelog.config.data.UserSession;
 import com.dailelog.repository.PostRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
@@ -37,6 +36,20 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
+
+
+    @GetMapping("/foo")
+    public Long foo(UserSession userSession){
+        log.info(">>>{}", userSession.id);
+
+        return userSession.id;
+    }
+
+    @GetMapping("/bar")
+    public String bar(UserSession userSession){
+        return "인증이 필요한 페이지 입니다.";
+    }
+
 
     //글 등록
     @PostMapping("/posts")

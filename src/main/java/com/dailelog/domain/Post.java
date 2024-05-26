@@ -14,6 +14,10 @@ public class Post {
     @Column
     private String title;
 
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
     @Lob
     @Column
     private String content;

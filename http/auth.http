@@ -1,0 +1,27 @@
+### 회원가입
+
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "name": "김동혁",
+  "loginId": "userid",
+  "password": "1234"
+}
+
+
+### 로그인
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "loginId": "userid",
+  "password": "1234"
+}
+
+### 인증 페이지 요청
+GET http://localhost:8080/foo
+Content-Type: application/json
+Cookie:  SESSION=3f7e45ea-d7b1-4efc-9e1b-84e3234e96e4
+ //로그인시 항상 갱신됨

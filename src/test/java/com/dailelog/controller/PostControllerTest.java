@@ -42,7 +42,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts")
+    @DisplayName("글 작성 요청시 ")
     void test() throws Exception {
         //when
         //PostCreate request = new PostCreate("제목입니다.","내용입니다.");
