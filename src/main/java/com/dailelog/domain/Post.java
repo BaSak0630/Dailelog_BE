@@ -1,6 +1,5 @@
 package com.dailelog.domain;
 
-import com.dailelog.request.PostEdit;
 import jakarta.persistence.*;
 import lombok.*;
 
