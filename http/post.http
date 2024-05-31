@@ -11,5 +11,5 @@ Content-Type: application/json
 
 ### 게시글 삭제
 
-DELETE http://localhost:8080/posts/3
+DELETE http://localhost:8080/posts/1
 Content-Type: application/json

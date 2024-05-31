@@ -50,7 +50,6 @@ public class PostController {
         return "인증이 필요한 페이지 입니다.";
     }
 
-
     //글 등록
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request){
@@ -59,12 +58,6 @@ public class PostController {
         //return postService.write(request);
     }
 
-    @GetMapping("/posts")
-    public List<PostResponse> getAll(@ModelAttribute PostSearch postSearch) {
-        return postService.getList(postSearch);
-    }
-
-
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable(name = "postId") Long id) {
         //Request 클래스 요청과 벨리데이션 용
@@ -72,6 +65,11 @@ public class PostController {
 
         return postService.get(id);
         //응답 클래스를 분리하세요(서비스 정책의 맞는)
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponse> getAll(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 
     @PatchMapping("/posts/{postId}")

@@ -1,6 +1,5 @@
     |===
     |Path|Type|Description|Optional|Constraint
-
     {{#fields}}
     |{{path}}
     |{{type}}
