@@ -105,3 +105,10 @@ fabric.properties
 
 ### VS Code ###
 .vscode/
+### JetBrains+all template
+
+### jwt ###
+application-secret.yml
+
+### application ###
+application.yml
