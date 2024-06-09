@@ -46,5 +46,6 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
                 .orElseThrow(Unauthorized::new);
 
         return new UserSession(session.getUser().getId());
+
     }
 }
