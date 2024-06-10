@@ -5,6 +5,7 @@ import com.dailelog.request.Signup;
 import com.dailelog.response.SessionResponse;
 import com.dailelog.service.AuthService;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
+import java.util.Base64;
 
 @Slf4j
 @RestController
@@ -26,13 +28,23 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private static final String KEY= "s5ZweJAp9NjHKslNcN1cTlYJoTTl7dEpE3Cem4mF3aE=";
+
     @PostMapping("/auth/login")
     public SessionResponse login(@RequestBody @Valid Login login) {
-        String accessToken = authService.signin(login);
+        Long userId = authService.signin(login);
 
+        /*
         SecretKey key = Jwts.SIG.HS256.key().build();
+        byte[] encodeKey = key.getEncoded();  //키를 byte로 뽑아서
+        String strKey = Base64.getEncoder().encodeToString(encodeKey); //Base64롤 다시 string encodeing 해주면 string 고정됨
+        */
+        SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY));
 
-        String jws = Jwts.builder().subject("Joe").signWith(key).compact();
+        String jws = Jwts.builder()
+                .subject(String.valueOf(userId))
+                .signWith(key)
+                .compact();
 
         return new SessionResponse(jws);
         /*ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)

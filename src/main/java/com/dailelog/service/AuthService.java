@@ -23,7 +23,7 @@ public class AuthService {
     private final UserRepository userRepository;
 
     @Transactional
-    public String signin(Login login) {
+    public Long signin(Login login) {
 
         userRepository.findByLoginId(login.getLoginId())
                 .orElseThrow(UserNotFound::new);
@@ -33,7 +33,7 @@ public class AuthService {
 
         Session session = user.addSession();
 
-        return session.getAccessToken();
+        return user.getId();
     }
     @Transactional
     public void signup(Signup signup) {

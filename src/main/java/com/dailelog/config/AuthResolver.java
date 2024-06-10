@@ -4,6 +4,10 @@ import com.dailelog.config.data.UserSession;
 import com.dailelog.domain.Session;
 import com.dailelog.exception.Unauthorized;
 import com.dailelog.repository.SessionRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +19,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Base64;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final SessionRepository sessionRepository;
+    private static final String KEY= "s5ZweJAp9NjHKslNcN1cTlYJoTTl7dEpE3Cem4mF3aE=";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -28,24 +35,24 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest serveletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        if(serveletRequest == null) {
-            log.error("servlet request is null");
+        String jws = webRequest.getHeader("Authorization");
+        if(jws == null  || jws.isEmpty()) {
             throw new Unauthorized();
         }
 
-        Cookie[] cookies = serveletRequest.getCookies();
-        if(cookies.length==0){
-            log.error("cookie is empty");
+        byte[] decodeedKey = Base64.getDecoder().decode(KEY);
+
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(decodeedKey)
+                    .build()
+                    .parseSignedClaims(jws);
+
+            String userid = claims.getBody().getSubject();
+
+            return new UserSession(Long.parseLong(userid));
+        } catch (JwtException e) {
             throw new Unauthorized();
         }
-
-        String accessToken = cookies[0].getValue();
-
-        Session session = sessionRepository.findByAccessToken(accessToken)
-                .orElseThrow(Unauthorized::new);
-
-        return new UserSession(session.getUser().getId());
-
     }
 }

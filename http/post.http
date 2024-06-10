@@ -13,3 +13,8 @@ Content-Type: application/json
 
 DELETE http://localhost:8080/posts/1
 Content-Type: application/json
+
+###테스트 요청
+GET localhost:8080/foo
+content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.F0y0eiqjhi9meaq9IDnfIwgtBK3osba4qEMgFWAnySs
