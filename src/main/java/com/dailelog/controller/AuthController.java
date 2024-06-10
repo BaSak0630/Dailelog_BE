@@ -4,6 +4,7 @@ import com.dailelog.request.Login;
 import com.dailelog.request.Signup;
 import com.dailelog.response.SessionResponse;
 import com.dailelog.service.AuthService;
+import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.SecretKey;
 import java.time.Duration;
 
 @Slf4j
@@ -25,9 +27,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<Object> signin(@RequestBody @Valid Login login) {
+    public SessionResponse login(@RequestBody @Valid Login login) {
         String accessToken = authService.signin(login);
-        ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
+
+        SecretKey key = Jwts.SIG.HS256.key().build();
+
+        String jws = Jwts.builder().subject("Joe").signWith(key).compact();
+
+        return new SessionResponse(jws);
+        /*ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
                 .domain("localhost") //todo 서버환경에따라 변경필요
                 .path("/")
                 .httpOnly(true)
@@ -38,7 +46,7 @@ public class AuthController {
         log.info(">>> cookie name = {}",cookie.getName());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+                .build();*/
     }
 
     @PostMapping("/auth/signup")
