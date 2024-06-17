@@ -17,4 +17,4 @@ Content-Type: application/json
 ###테스트 요청
 GET localhost:8080/foo
 content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.F0y0eiqjhi9meaq9IDnfIwgtBK3osba4qEMgFWAnySs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzE4MjYzNTMxfQ.jkxAF4sscVPnStHD1aQHh75Pgca-z6PWE2PHlU1za98

@@ -1,6 +1,5 @@
 package com.dailelog.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
