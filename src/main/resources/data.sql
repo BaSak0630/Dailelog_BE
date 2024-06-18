@@ -1,2 +1,1 @@
-INSERT INTO 'user' (name,loginId,password;,createdAt)
-VALUES ('김동혁', 'daile123', '1234', '2024-06-17 17:43:00')
+insert into 'user' (name,login_id,password,create_at) values ('김동혁','daile123','1234','2024-06-17 20:20:29')

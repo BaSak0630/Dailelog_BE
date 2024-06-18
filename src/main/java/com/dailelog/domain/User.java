@@ -23,7 +23,6 @@ public class User {
 
     private String name;
 
-    @Column(unique = true)
     private String loginId; // 아이디
 
     private String password;
