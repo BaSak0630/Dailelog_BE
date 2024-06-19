@@ -1,6 +1,7 @@
 package com.dailelog.service;
 
 import com.dailelog.crypto.PasswordEncoder;
+import com.dailelog.crypto.ScryptPasswordEncoder;
 import com.dailelog.domain.User;
 import com.dailelog.exception.AlreadyExistsAccountException;
 import com.dailelog.exception.InvalidSinginInformation;
@@ -12,10 +13,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//@ActiveProfiles("test")
 @SpringBootTest
 class AuthServiceTest {
     @Autowired
@@ -33,6 +35,7 @@ class AuthServiceTest {
     @DisplayName("회원가입 성공")
     void test1() {
         // given
+        PasswordEncoder encoder = new ScryptPasswordEncoder();
         Signup signup = Signup.builder()
                 .loginId("userid")
                 .password("1234")
@@ -46,9 +49,11 @@ class AuthServiceTest {
         assertEquals(1, userRepository.count());
 
         User user = userRepository.findAll().iterator().next();
+
         assertEquals("userid", user.getLoginId());
-        assertNotNull(user.getPassword());
-        assertNotEquals("1234", user.getPassword()); //임시 평문이 아니다
+        /*assertNotNull(user.getPassword());
+        assertNotEquals("1234", user.getPassword()); //임시 평문이 아니다*/
+        assertTrue(encoder.matches(signup.getPassword(), user.getPassword()));
         assertEquals("김동혁", user.getName());
     }
 
@@ -77,8 +82,8 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     void test3() {
         // given
-        PasswordEncoder encoder = new PasswordEncoder();
-        String ecnryptedPassword = encoder.encrpyt("1234");
+        ScryptPasswordEncoder encoder = new ScryptPasswordEncoder();
+        String ecnryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
                 .loginId("daile123")
@@ -103,8 +108,8 @@ class AuthServiceTest {
     @DisplayName("비밀번호 틀림")
     void test4() {
         // given
-        PasswordEncoder encoder = new PasswordEncoder();
-        String ecnryptedPassword = encoder.encrpyt("1234");
+        ScryptPasswordEncoder encoder = new ScryptPasswordEncoder();
+        String ecnryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
                 .loginId("daile123")
