@@ -2,7 +2,9 @@ package com.dailelog.service;
 
 import com.dailelog.domain.User;
 import com.dailelog.exception.AlreadyExistsAccountException;
+import com.dailelog.exception.InvalidSinginInformation;
 import com.dailelog.repository.UserRepository;
+import com.dailelog.request.Login;
 import com.dailelog.request.Signup;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +59,7 @@ class AuthServiceTest {
                 .password("1234")
                 .name("짱돌맨")
                 .build();
-        userRepository.save(user);
+        userRepository.save(user); //사용자 비밀번호가 암호화 되어있지 않음
 
         Signup signup = Signup.builder()
                 .loginId("daile123")
@@ -74,21 +76,42 @@ class AuthServiceTest {
     void test3() {
         // given
         Signup signup = Signup.builder()
-                .loginId("userid")
+                .loginId("daile123")
                 .password("1234")
                 .name("김동혁")
                 .build();
+        authService.signup(signup);  //db에 암호화 저장
+
+        Login login = Login.builder()
+                .loginId("daile123")
+                .password("1234")
+                .build();
 
         // when
-        authService.signup(signup);
+        Long userId = authService.signin(login);
 
         // then
-        assertEquals(1, userRepository.count());
+        assertNotNull(userId);
+    }
 
-        User user = userRepository.findAll().iterator().next();
-        assertEquals("userid", user.getLoginId());
-        assertNotNull(user.getPassword());
-        assertNotEquals("1234", user.getPassword()); //임시 평문이 아니다
-        assertEquals("김동혁", user.getName());
+    @Test
+    @DisplayName("비밀번호 틀림")
+    void test4() {
+        // given
+        Signup signup = Signup.builder()
+                .loginId("daile123")
+                .password("1234")
+                .name("김동혁")
+                .build();
+        authService.signup(signup);  //db에 암호화 저장
+
+        Login login = Login.builder()
+                .loginId("daile123")
+                .password("5678")
+                .build();
+
+        // expected
+        assertThrows(InvalidSinginInformation.class,()->authService.signin(login));
+
     }
 }
