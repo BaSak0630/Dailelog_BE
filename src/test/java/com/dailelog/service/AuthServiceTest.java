@@ -1,5 +1,6 @@
 package com.dailelog.service;
 
+import com.dailelog.crypto.PasswordEncoder;
 import com.dailelog.domain.User;
 import com.dailelog.exception.AlreadyExistsAccountException;
 import com.dailelog.exception.InvalidSinginInformation;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,12 +77,15 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     void test3() {
         // given
-        Signup signup = Signup.builder()
+        PasswordEncoder encoder = new PasswordEncoder();
+        String ecnryptedPassword = encoder.encrpyt("1234");
+
+        User user = User.builder()
                 .loginId("daile123")
-                .password("1234")
+                .password(ecnryptedPassword)
                 .name("김동혁")
                 .build();
-        authService.signup(signup);  //db에 암호화 저장
+        userRepository.save(user);  //db에 암호화 저장
 
         Login login = Login.builder()
                 .loginId("daile123")
@@ -98,12 +103,16 @@ class AuthServiceTest {
     @DisplayName("비밀번호 틀림")
     void test4() {
         // given
-        Signup signup = Signup.builder()
+        PasswordEncoder encoder = new PasswordEncoder();
+        String ecnryptedPassword = encoder.encrpyt("1234");
+
+        User user = User.builder()
                 .loginId("daile123")
-                .password("1234")
+                .password(ecnryptedPassword)
                 .name("김동혁")
                 .build();
-        authService.signup(signup);  //db에 암호화 저장
+        userRepository.save(user);  //db에 암호화 저장
+
 
         Login login = Login.builder()
                 .loginId("daile123")

@@ -1,5 +1,6 @@
 package com.dailelog.service;
 
+import com.dailelog.crypto.PasswordEncoder;
 import com.dailelog.domain.Session;
 import com.dailelog.domain.User;
 import com.dailelog.exception.AlreadyExistsAccountException;
@@ -27,20 +28,13 @@ public class AuthService {
         User user = userRepository.findByLoginId(login.getLoginId())
                 .orElseThrow(InvalidSinginInformation::new); //사용자가 없는 것인지 비밀번호가 틀린것인지 취약점이 노출될 수 있어서
 
-        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(
-                16,
-                8,
-                1,
-                32,
-                64);
+        PasswordEncoder encoder = new PasswordEncoder();
 
         var matches = encoder.matches(login.getPassword(), user.getPassword());
         if (!matches) {
             throw new InvalidSinginInformation();
         }
-
         //Session session = user.addSession();
-
         return user.getId();
     }
     @Transactional
@@ -50,14 +44,9 @@ public class AuthService {
             throw new AlreadyExistsAccountException();
         }
 
-        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(
-                16,
-                8,
-                1,
-                32,
-                64);
+        PasswordEncoder encoder = new PasswordEncoder();
 
-        String encryptedPassword = encoder.encode(signup.getPassword());
+        String encryptedPassword = encoder.encrpyt(signup.getPassword());
 
         userRepository.save(User.builder()
                 .name(signup.getName())
