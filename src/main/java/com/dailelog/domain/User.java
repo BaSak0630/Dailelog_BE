@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,32 +22,22 @@ public class User {
 
     private String name;
 
-    private String loginId; // 아이디
+    private String account; // 아이디
 
     private String password;
 
-    private LocalDateTime createdAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
+    private String email;
 
+    private LocalDateTime createdAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
 
-    public Session addSession(){
-        Session session = Session.builder()
-                .user(this)
-                .build();
-
-        sessions.add(session);
-
-        return session;
-    }
-
     @Builder
-    public User(String name, String loginId, String password) {
+    public User(String name, String account, String password, String email) {
         this.name = name;
-        this.loginId = loginId;
+        this.account = account;
         this.password = password;
+        this.email = email;
         this.createdAt = LocalDateTime.now();
     }
 }

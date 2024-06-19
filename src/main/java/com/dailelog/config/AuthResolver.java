@@ -1,10 +1,7 @@
 package com.dailelog.config;
 
 import com.dailelog.config.data.UserSession;
-import com.dailelog.domain.Session;
 import com.dailelog.exception.Unauthorized;
-import com.dailelog.repository.SessionRepository;
-import com.dailelog.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -17,13 +14,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Base64;
-
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
-
-    private final SessionRepository sessionRepository;
     private final AppConfig appConfig;
 
     @Override

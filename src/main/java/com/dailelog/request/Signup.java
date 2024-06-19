@@ -9,15 +9,19 @@ public class Signup {
     private String name;
 
     @NotBlank(message = "아이디 입력해주세요")
-    private String loginId; // 아이디
+    private String account; // 아이디
 
     @NotBlank(message = "비밀번호를 입력해주세요")
-    public final String password;
+    private final String password;
+
+    @NotBlank(message = "이메일을 입력해주세요")
+    private final String email;
 
     @Builder
-    public Signup(String name,String password, String loginId) {
-        this.password = password;
-        this.loginId = loginId;
+    public Signup(String name, String account, String password, String email) {
         this.name = name;
+        this.account = account;
+        this.password = password;
+        this.email = email;
     }
 }
