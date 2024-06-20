@@ -1,5 +1,10 @@
-### 회원가입
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/x-www-form-urlencoded
 
+username=daile&password=1234
+
+### 회원가입
 POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
@@ -11,7 +16,6 @@ Content-Type: application/json
 
 
 ### 로그인
-
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
@@ -19,6 +23,7 @@ Content-Type: application/json
   "loginId": "userid",
   "password": "1234"
 }
+
 
 ### 인증 페이지 요청
 GET http://localhost:8080/foo
