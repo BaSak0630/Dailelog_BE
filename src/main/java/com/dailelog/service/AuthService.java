@@ -23,7 +23,7 @@ public class AuthService {
 
     @Transactional
     public void signup(Signup signup) {
-        Optional<User> userOptional = userRepository.findByLoginId(signup.getAccount());
+        Optional<User> userOptional = userRepository.findByAccount(signup.getAccount());
         if (userOptional.isPresent()) {
             throw new AlreadyExistsAccountException();
         }

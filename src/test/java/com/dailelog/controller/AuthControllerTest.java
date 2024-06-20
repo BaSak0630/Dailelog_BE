@@ -2,6 +2,7 @@ package com.dailelog.controller;
 
 import com.dailelog.domain.User;
 import com.dailelog.repository.UserRepository;
+import com.dailelog.request.Signup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,5 +34,22 @@ class AuthControllerTest {
     void clean() {
         userRepository.deleteAll();
     }
+    
+    @Test
+    public void signup() throws Exception{
+        //given
+        Signup signup = Signup.builder()
+                .name("김동혁")
+                .email("daile123@gmail.com")
+                .password("1234")
+                .account("daile123")
+                .build();
 
+        //expected
+        mockMvc.perform(post("/auth/signup")
+                    .content(objectMapper.writeValueAsString(signup))
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

@@ -38,18 +38,6 @@ public class PostController {
     private final PostRepository postRepository;
 
 
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession){
-        log.info(">>>{}", userSession.id);
-
-        return userSession.id;
-    }
-
-    @GetMapping("/bar")
-    public String bar(UserSession userSession){
-        return "인증이 필요한 페이지 입니다.";
-    }
-
     //글 등록
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request){
@@ -77,5 +65,10 @@ public class PostController {
         postService.edit(postId, request);
     }
 
+    @DeleteMapping("/posts/{postId}")
+    public void delete(@PathVariable(name = "postId") Long postId) {
+        PostResponse response = postService.get(postId);
+        postService.delete(response.getId());
+    }
 }
 
