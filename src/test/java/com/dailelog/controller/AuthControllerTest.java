@@ -2,7 +2,7 @@ package com.dailelog.controller;
 
 import com.dailelog.domain.User;
 import com.dailelog.repository.UserRepository;
-import com.dailelog.request.Login;
+import com.dailelog.request.Signup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,60 +34,22 @@ class AuthControllerTest {
     void clean() {
         userRepository.deleteAll();
     }
-
+    
     @Test
-    @DisplayName("로그인 성공")
-    public void test() throws Exception{
+    public void signup() throws Exception{
         //given
-        userRepository.save(User.builder()
-                .loginId("userid")
-                .password("1234")
+        Signup signup = Signup.builder()
                 .name("김동혁")
-                .build());
-
-        Login login = Login.builder()
-                .loginId("userid")
+                .email("daile123@gmail.com")
                 .password("1234")
+                .account("daile123")
                 .build();
 
-        String json = objectMapper.writeValueAsString(login);
-
-        //excepted
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        //expected
+        mockMvc.perform(post("/auth/signup")
+                    .content(objectMapper.writeValueAsString(signup))
+                    .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("로그인 성공 후 세션 1개")
-    public void tes2() throws Exception{
-        //given
-        User user = userRepository.save(User.builder()
-                .loginId("userid")
-                .password("1234")
-                .name("김동혁")
-                .build());
-
-        Login login = Login.builder()
-                .loginId("userid")
-                .password("1234")
-                .build();
-
-        String json = objectMapper.writeValueAsString(login);
-
-        //excepted
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-        User loggedInUser = userRepository.findByLoginId(user.getLoginId())
-                .orElseThrow(RuntimeException::new);
-
-        assertEquals(1L,loggedInUser.getSessions().size());
     }
 }

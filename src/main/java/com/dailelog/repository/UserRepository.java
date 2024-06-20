@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Integer> {
-    Optional<User> findByLoginIdAndPassword(String loginId,String password);
-    Optional<User> findByLoginId(String loginId);
+    Optional<User> findByAccountAndPassword(String account,String password);
+    Optional<User> findByAccount(String account);
 }
