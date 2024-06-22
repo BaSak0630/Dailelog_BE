@@ -1,23 +1,20 @@
 package com.dailelog.config;
 
+import com.dailelog.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -26,43 +23,54 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                        //.requestMatchers("/")
                         .requestMatchers("/favicon.ico")
                         .requestMatchers("/error");
-                        //.requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(auth->
-                        auth.requestMatchers("/auth/login").permitAll()
-                                .anyRequest()
-                                .authenticated())
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth->
+                        auth
+                                .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/auth/signup").permitAll()
+                                .requestMatchers("/user").hasAnyRole("ADMIN","USER")
+                                .requestMatchers("/admin").hasAnyRole("ADMIN")
+                                .anyRequest().authenticated()
+                )
                 .formLogin(formLogin ->
-                        formLogin.loginPage("/auth/login")
+                        formLogin
+                                .loginPage("/auth/login").permitAll()
                                 .loginProcessingUrl("/auth/login")//post로 던지는 주소
                                 .usernameParameter("username")
                                 .passwordParameter("password")
-                                .defaultSuccessUrl("/"))
-                .userDetailsService(userDetailsService())
-                .csrf(AbstractHttpConfigurer::disable)
-                .build();
+                                .failureUrl("/auth/login")
+                                .defaultSuccessUrl("/")
+                )
+                .rememberMe(rm-> rm
+                        .rememberMeParameter("remember")
+                        .alwaysRemember(false)
+                        .tokenValiditySeconds(2592000)
+                );
+        return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        UserDetails user = User.withUsername("daile")
-                .password("1234")
-                .roles("ADMIN")
-                .build();
-        manager.createUser(user);
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return username -> {
+            com.dailelog.domain.User user = userRepository.findByAccount(username).orElseThrow(() -> new UsernameNotFoundException(username + "is not found"));
 
-        return manager;
+            return new UserPrincipal(user);
+        };
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new SCryptPasswordEncoder(
+                16,
+                8,
+                1,
+                32,
+                64);
     }
 }

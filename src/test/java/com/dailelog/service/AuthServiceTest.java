@@ -1,10 +1,7 @@
 package com.dailelog.service;
 
-import com.dailelog.crypto.PasswordEncoder;
-import com.dailelog.crypto.ScryptPasswordEncoder;
 import com.dailelog.domain.User;
 import com.dailelog.exception.AlreadyExistsAccountException;
-import com.dailelog.exception.InvalidSinginInformation;
 import com.dailelog.repository.UserRepository;
 import com.dailelog.request.Signup;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +22,9 @@ class AuthServiceTest {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @AfterEach
     void clean() {
         userRepository.deleteAll();
@@ -33,7 +34,6 @@ class AuthServiceTest {
     @DisplayName("회원가입 성공")
     void test1() {
         // given
-        PasswordEncoder encoder = new ScryptPasswordEncoder();
         Signup signup = Signup.builder()
                 .account("userid")
                 .password("1234")
@@ -52,7 +52,7 @@ class AuthServiceTest {
         assertEquals("userid", user.getAccount());
         /*assertNotNull(user.getPassword());
         assertNotEquals("1234", user.getPassword()); //임시 평문이 아니다*/
-        assertTrue(encoder.matches(signup.getPassword(), user.getPassword()));
+        assertTrue(passwordEncoder.matches(signup.getPassword(), user.getPassword()));
         assertEquals("김동혁", user.getName());
     }
 

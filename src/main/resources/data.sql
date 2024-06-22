@@ -1,1 +1,1 @@
-insert into 'user' (name,login_id,password,create_at) values ('김동혁','daile123','1234','2024-06-17 20:20:29')
+insert into 'user' (name,account,password,email,created_at) values ('김동혁','daile123','1234','daile@gmail.com','2024-06-17 20:20:29')

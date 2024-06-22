@@ -2,7 +2,8 @@
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=daile&password=1234
+username=daile&password=1234&remember=1
+
 
 ### 회원가입
 POST http://localhost:8080/auth/signup
@@ -10,23 +11,16 @@ Content-Type: application/json
 
 {
   "name": "김동혁",
-  "loginId": "userid",
-  "password": "1234"
+  "account": "daile",
+  "password": "1234",
+  "email": "daile@gmail.com"
 }
 
+### 사용자페이지
+GET http://localhost:8080/user
 
-### 로그인
-POST http://localhost:8080/auth/login
-Content-Type: application/json
+### 관리자페이지
+GET http://localhost:8080/admin
 
-{
-  "loginId": "userid",
-  "password": "1234"
-}
-
-
-### 인증 페이지 요청
-GET http://localhost:8080/foo
-Content-Type: application/json
-Cookie:  SESSION=3f7e45ea-d7b1-4efc-9e1b-84e3234e96e4
- //로그인시 항상 갱신됨
+### 메인페이지
+GET http://localhost:8080
