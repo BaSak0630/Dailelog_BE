@@ -1,6 +1,11 @@
 package com.dailelog.config;
 
+import com.dailelog.config.handler.Http401Handler;
+import com.dailelog.config.handler.Http403Handler;
+import com.dailelog.config.handler.LoginFailHandler;
 import com.dailelog.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,7 +23,10 @@ import org.springframework.security.web.access.expression.WebExpressionAuthoriza
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -30,23 +38,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->
-                        auth
-                                .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/auth/signup").permitAll()
-                                .requestMatchers("/user").hasAnyRole("ADMIN","USER")
-                                .requestMatchers("/admin").hasAnyRole("ADMIN")
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth-> auth
+                        .requestMatchers("/auth/login","/auth/signup").permitAll()
+                        .requestMatchers("/user").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/admin").hasAnyRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/auth/login").permitAll()
-                                .loginProcessingUrl("/auth/login")//post로 던지는 주소
-                                .usernameParameter("username")
-                                .passwordParameter("password")
-                                .failureUrl("/auth/login")
-                                .defaultSuccessUrl("/")
-                )
+                .formLogin(formLogin ->{
+                     formLogin.loginPage("/auth/login")
+                            .loginProcessingUrl("/auth/login")//post로 던지는 주소
+                            .usernameParameter("username")
+                            .passwordParameter("password")
+                            .defaultSuccessUrl("/",true)
+                            .failureHandler(new LoginFailHandler(objectMapper));
+                })
+                .exceptionHandling(e->{
+                    e.accessDeniedHandler(new Http403Handler(objectMapper));
+                    e.authenticationEntryPoint(new Http401Handler(objectMapper));
+                })
                 .rememberMe(rm-> rm
                         .rememberMeParameter("remember")
                         .alwaysRemember(false)
@@ -74,3 +83,4 @@ public class SecurityConfig {
                 64);
     }
 }
+

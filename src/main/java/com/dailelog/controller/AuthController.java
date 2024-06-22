@@ -28,4 +28,8 @@ public class AuthController {
     public void signup(@RequestBody @Valid Signup signup) {
         authService.signup(signup);
     }
+    @GetMapping("/auth/signup")
+    public String signup() {
+        return "회원가입페이지";
+    }
 }

@@ -1,6 +1,5 @@
 package com.dailelog.controller;
 
-import com.dailelog.config.data.UserSession;
 import com.dailelog.repository.PostRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
