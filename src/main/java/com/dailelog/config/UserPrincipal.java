@@ -13,7 +13,7 @@ public class UserPrincipal extends User {
     private final Long userId;
 
     public UserPrincipal(com.dailelog.domain.User user) {
-        super(user.getAccount(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        super(user.getAccount(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         this.userId = user.getId();
     }
 

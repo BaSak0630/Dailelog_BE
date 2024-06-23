@@ -19,17 +19,8 @@ public class AuthController {
     private final AuthService authService;
     private final AppConfig appConfig;
 
-    @GetMapping("/auth/login")
-    public String login() {
-        return "로그인페이지입니다.";
-    }
-
     @PostMapping("/auth/signup")
     public void signup(@RequestBody @Valid Signup signup) {
         authService.signup(signup);
-    }
-    @GetMapping("/auth/signup")
-    public String signup() {
-        return "회원가입페이지";
     }
 }
