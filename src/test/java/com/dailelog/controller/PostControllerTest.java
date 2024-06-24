@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -42,6 +43,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 작성 요청시 ")
     void test() throws Exception {
         //when
@@ -88,6 +90,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("/posts 요청시 DB값 저장")
     void Saved_DB_POST_Request() throws Exception {
 
@@ -115,6 +118,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 1개 조회")
     public void test4() throws Exception{
         //given
@@ -134,6 +138,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 1페이지 조회")
     public void test5() throws Exception{
         //given
@@ -162,6 +167,7 @@ class PostControllerTest {
          */
     }
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 페이지 0으로 해도 1페이지 조회")
     public void test6() throws Exception{
         //given
@@ -191,6 +197,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 제목 수정")
     public void test7() throws Exception{
         //given
@@ -216,6 +223,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 내용 수정")
     public void test8() throws Exception{
         //given
@@ -241,6 +249,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("존재하지 않는 게시글 조회")
     public void test9() throws Exception{
         //expected
@@ -251,6 +260,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("존재하지 않는 게시글 조회")
     public void test10() throws Exception{
         PostEdit postEdit = PostEdit.builder()
@@ -266,6 +276,7 @@ class PostControllerTest {
                 .andDo(print());
     }
     @Test
+    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("게시글 작성시 제목에 '바보'는 포함 될 수 없다")
     void test11() throws Exception {
 
