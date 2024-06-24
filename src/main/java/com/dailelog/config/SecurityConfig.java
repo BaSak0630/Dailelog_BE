@@ -35,7 +35,6 @@ import org.springframework.session.security.web.authentication.SpringSessionReme
 
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 

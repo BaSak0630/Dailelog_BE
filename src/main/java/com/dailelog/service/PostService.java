@@ -2,8 +2,11 @@ package com.dailelog.service;
 
 import com.dailelog.domain.Post;
 import com.dailelog.domain.PostEditor;
+import com.dailelog.domain.User;
 import com.dailelog.exception.PostNotFound;
+import com.dailelog.exception.UserNotFound;
 import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.UserRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
 import com.dailelog.request.PostSearch;
@@ -16,18 +19,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.dailelog.domain.QUser.user;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void write(PostCreate postCreate){
+    public void write(Long userId,PostCreate postCreate){
+        var user = userRepository.findById(Math.toIntExact(userId)).orElseThrow(UserNotFound::new);
+
         //postCreate -> Entity
         Post post = Post.builder()
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
+                .user(user)
                 .build();
 
        postRepository.save(post);

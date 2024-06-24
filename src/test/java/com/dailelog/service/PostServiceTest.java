@@ -1,8 +1,11 @@
 package com.dailelog.service;
 
+import com.dailelog.config.UserPrincipal;
 import com.dailelog.domain.Post;
+import com.dailelog.domain.User;
 import com.dailelog.exception.PostNotFound;
 import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.UserRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
 import com.dailelog.request.PostSearch;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,16 +32,25 @@ class PostServiceTest {
 
    @Autowired
    private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
    @BeforeEach
    void clean() {
       postRepository.deleteAll();
+      userRepository.deleteAll();
    }
 
    @Test
    @DisplayName("글작성 ")
    public void test1() throws Exception{
-
+      var user = User.builder()
+              .name("김동혁")
+              .account("daile")
+              .password("1234")
+              .email("daile@gmail.com")
+              .build();
+      userRepository.save(user);
       //given
       PostCreate postCreate = PostCreate.builder()
               .title("제목입니다.")
@@ -45,7 +58,7 @@ class PostServiceTest {
               .build();
 
       //when
-      postService.write(postCreate);
+      postService.write(user.getId(),postCreate);
 
       //then
       assertEquals(1L, postRepository.count());

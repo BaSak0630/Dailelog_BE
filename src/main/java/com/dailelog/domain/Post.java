@@ -23,9 +23,10 @@ public class Post {
     private String content;
 
     @Builder
-    public Post(String title, String content) {
+    public Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public PostEditor.PostEditorBuilder toEditor(){
@@ -37,5 +38,8 @@ public class Post {
     public void edit(PostEditor postEditor) {
         this.title = postEditor.getTitle();
         this.content = postEditor.getContent();
+    }
+    public Long getUserId() {
+        return user.getId();
     }
 }

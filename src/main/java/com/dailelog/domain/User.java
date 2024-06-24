@@ -29,7 +29,8 @@ public class User {
     private String email;
 
     private LocalDateTime createdAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
 
     @Builder

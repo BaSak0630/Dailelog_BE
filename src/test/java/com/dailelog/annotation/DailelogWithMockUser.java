@@ -6,14 +6,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-//@WithSecurityContext(factory = MockUSerFactory.class)
-public @interface CustomWithMockUser {
+@WithSecurityContext(factory = DailelogMockUserFactory.class)
+public @interface DailelogWithMockUser {
 
     String username() default "daile";
 
     String password() default "1234";
 
-    int level() default 5;
+    String email() default "daile@daile.com";
 
-    String mobileNumber() default "123456789";
+    String name() default "daile";
+
+    String role() default "ROLE_ADMIN";
 }

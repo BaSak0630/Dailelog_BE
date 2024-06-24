@@ -1,5 +1,6 @@
 package com.dailelog.controller;
 
+import com.dailelog.annotation.DailelogWithMockUser;
 import com.dailelog.domain.Post;
 import com.dailelog.repository.PostRepository;
 import com.dailelog.request.PostCreate;
@@ -43,7 +44,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
+    @DailelogWithMockUser(name = "daile",username = "daile",email = "daile@gmail.com",password = "1234")
     @DisplayName("글 작성 요청시 ")
     void test() throws Exception {
         //when

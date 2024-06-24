@@ -1,5 +1,6 @@
 package com.dailelog.controller;
 
+import com.dailelog.config.UserPrincipal;
 import com.dailelog.repository.PostRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,15 +37,13 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
-
-
     //글 등록
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') && #request.userId = '101'") //request dto을 넣어서 채킹할수 있다
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request){
+    public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostCreate request){
         request.validate();
-        postService.write(request);
+        postService.write(userPrincipal.getUserId(),request);
         //return postService.write(request);
     }
 
@@ -67,7 +67,8 @@ public class PostController {
         postService.edit(postId, request);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')&&hasPermission(#postId,'POST','DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable(name = "postId") Long postId) {
         PostResponse response = postService.get(postId);
