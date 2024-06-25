@@ -14,6 +14,7 @@ public class UserPrincipal extends User {
 
     public UserPrincipal(com.dailelog.domain.User user) {
         super(user.getAccount(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        //DB에서 사용자마다 권한이 다르면 적용해주어야함
         this.userId = user.getId();
     }
 

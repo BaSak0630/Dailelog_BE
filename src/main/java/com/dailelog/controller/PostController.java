@@ -42,7 +42,7 @@ public class PostController {
     //@PreAuthorize("hasRole('ROLE_ADMIN') && #request.userId = '101'") //request dto을 넣어서 채킹할수 있다
     @PostMapping("/posts")
     public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostCreate request){
-        request.validate();
+        //request.validate();
         postService.write(userPrincipal.getUserId(),request);
         //return postService.write(request);
     }

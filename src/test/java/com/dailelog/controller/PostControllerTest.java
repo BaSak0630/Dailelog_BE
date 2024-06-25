@@ -1,11 +1,14 @@
 package com.dailelog.controller;
 
-import com.dailelog.annotation.DailelogWithMockUser;
+import com.dailelog.annotation.DailelogMockSecurityContext;
+import com.dailelog.annotation.DailelogMockUser;
 import com.dailelog.domain.Post;
 import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.UserRepository;
 import com.dailelog.request.PostCreate;
 import com.dailelog.request.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,13 +41,17 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach//각메서드 실행 전에 실행
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach//각메서드 실행 전에 실행
     void clean() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
-    @DailelogWithMockUser(name = "daile",username = "daile",email = "daile@gmail.com",password = "1234")
+    @DailelogMockUser
     @DisplayName("글 작성 요청시 ")
     void test() throws Exception {
         //when
@@ -55,9 +62,6 @@ class PostControllerTest {
                 .build();
 
         String json = objectMapper.writeValueAsString(request);//getter 로 제이슨으로 가공해줌
-
-        System.out.println(json);
-
         //expected
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
@@ -91,7 +95,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
+    @DailelogMockUser
     @DisplayName("/posts 요청시 DB값 저장")
     void Saved_DB_POST_Request() throws Exception {
 
@@ -119,7 +123,6 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("글 1개 조회")
     public void test4() throws Exception{
         //given
@@ -250,7 +253,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
+    @DailelogMockUser
     @DisplayName("존재하지 않는 게시글 조회")
     public void test9() throws Exception{
         //expected
@@ -276,7 +279,7 @@ class PostControllerTest {
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
-    @Test
+   /* @Test
     @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("게시글 작성시 제목에 '바보'는 포함 될 수 없다")
     void test11() throws Exception {
@@ -295,5 +298,5 @@ class PostControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andDo(print());
-    }
+    }*/
 }

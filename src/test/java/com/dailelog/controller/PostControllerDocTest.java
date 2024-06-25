@@ -1,7 +1,10 @@
 package com.dailelog.controller;
 
+import com.dailelog.annotation.DailelogMockSecurityContext;
+import com.dailelog.annotation.DailelogMockUser;
 import com.dailelog.domain.Post;
 import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.UserRepository;
 import com.dailelog.request.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -11,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.*;
@@ -37,7 +39,16 @@ public class PostControllerDocTest {
     private PostRepository postRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @AfterEach
+    public void clean() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("post id 조회")
@@ -66,7 +77,7 @@ public class PostControllerDocTest {
                 ));
     }
     @Test
-    @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
+    @DailelogMockUser
     @DisplayName("글 등록")
     public void test2() throws Exception{
         //given

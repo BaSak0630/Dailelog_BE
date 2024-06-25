@@ -8,18 +8,21 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 
 @RequiredArgsConstructor
-public class DailelogMockUserFactory implements WithSecurityContextFactory<DailelogWithMockUser> {
-    private UserRepository userRepository;
+public class DailelogMockSecurityContext implements WithSecurityContextFactory<DailelogMockUser> {
+    private final UserRepository userRepository;
     @Override
-    public SecurityContext createSecurityContext(DailelogWithMockUser annotation) {
-        String username = annotation.username();
+    public SecurityContext createSecurityContext(DailelogMockUser annotation) {
+        String username = annotation.account();
         String password = annotation.password();
         String name = annotation.name();
         String email = annotation.email();
@@ -44,4 +47,3 @@ public class DailelogMockUserFactory implements WithSecurityContextFactory<Daile
         return context;
     }
 }
-
