@@ -3,6 +3,7 @@ package com.dailelog.controller;
 import com.dailelog.annotation.DailelogMockSecurityContext;
 import com.dailelog.annotation.DailelogMockUser;
 import com.dailelog.domain.Post;
+import com.dailelog.domain.User;
 import com.dailelog.repository.PostRepository;
 import com.dailelog.repository.UserRepository;
 import com.dailelog.request.PostCreate;
@@ -279,6 +280,27 @@ class PostControllerTest {
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
+
+    @Test
+    @DailelogMockUser(account = "daile",password = "1234",name = "김동혁",email = "daile@gmail.com")
+    @DisplayName("계시글 삭제")
+    void test11() throws Exception{
+
+        User user = userRepository.findAll().get(0);
+
+        Post post = Post.builder()
+                .title("제목")
+                .content("반포자이")
+                .user(user)
+                .build();
+        postRepository.save(post);
+
+        mockMvc.perform(delete("/posts/{postId}",post.getId())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
    /* @Test
     @WithMockUser(username = "daile", roles = {"ADMIN"},password = "1234")
     @DisplayName("게시글 작성시 제목에 '바보'는 포함 될 수 없다")
