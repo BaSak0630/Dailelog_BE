@@ -1,10 +1,9 @@
 package com.dailelog.controller;
 
 import com.dailelog.config.UserPrincipal;
-import com.dailelog.repository.PostRepository;
-import com.dailelog.request.PostCreate;
-import com.dailelog.request.PostEdit;
-import com.dailelog.request.PostSearch;
+import com.dailelog.request.post.PostCreate;
+import com.dailelog.request.post.PostEdit;
+import com.dailelog.request.post.PostSearch;
 import com.dailelog.response.PostResponse;
 import com.dailelog.service.PostService;
 import jakarta.validation.Valid;

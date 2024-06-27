@@ -2,24 +2,22 @@ package com.dailelog.service;
 
 import com.dailelog.domain.Post;
 import com.dailelog.domain.PostEditor;
-import com.dailelog.domain.User;
 import com.dailelog.exception.PostNotFound;
 import com.dailelog.exception.UserNotFound;
-import com.dailelog.repository.PostRepository;
 import com.dailelog.repository.UserRepository;
-import com.dailelog.request.PostCreate;
-import com.dailelog.request.PostEdit;
-import com.dailelog.request.PostSearch;
+import com.dailelog.repository.post.PostRepository;
+import com.dailelog.request.post.PostCreate;
+import com.dailelog.request.post.PostEdit;
+import com.dailelog.request.post.PostSearch;
 import com.dailelog.response.PostResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.dailelog.domain.QUser.user;
 
 @Slf4j
 @Service
@@ -29,7 +27,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void write(Long userId,PostCreate postCreate){
+    public void write(Long userId, PostCreate postCreate){
         var user = userRepository.findById(Math.toIntExact(userId)).orElseThrow(UserNotFound::new);
 
         //postCreate -> Entity

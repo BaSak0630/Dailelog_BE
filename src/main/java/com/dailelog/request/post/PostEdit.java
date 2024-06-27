@@ -1,4 +1,4 @@
-package com.dailelog.request;
+package com.dailelog.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

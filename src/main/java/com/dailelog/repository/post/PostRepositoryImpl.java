@@ -1,7 +1,7 @@
-package com.dailelog.repository;
+package com.dailelog.repository.post;
 
 import com.dailelog.domain.Post;
-import com.dailelog.request.PostSearch;
+import com.dailelog.request.post.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

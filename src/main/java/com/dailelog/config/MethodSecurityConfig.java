@@ -1,6 +1,6 @@
 package com.dailelog.config;
 
-import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

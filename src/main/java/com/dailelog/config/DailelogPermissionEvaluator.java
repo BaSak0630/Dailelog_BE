@@ -2,7 +2,7 @@ package com.dailelog.config;
 
 import com.dailelog.domain.Post;
 import com.dailelog.exception.PostNotFound;
-import com.dailelog.repository.PostRepository;
+import com.dailelog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.PermissionEvaluator;
