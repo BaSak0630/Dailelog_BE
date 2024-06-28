@@ -17,7 +17,7 @@ public class ExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse  invalidRequestHandler(MethodArgumentNotValidException e) {
+    public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
 
             /*FieldError fieldError = e.getFieldError();
             String field = fieldError.getField();
@@ -27,7 +27,7 @@ public class ExceptionController {
                 .message("잘못된 요청입니다.")
                 .build();
 
-        for(FieldError fieldError : e.getFieldErrors()) {
+        for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
@@ -46,5 +46,22 @@ public class ExceptionController {
                 .build();
 
         return ResponseEntity.status(statusCode).body(body);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
+        log.error("예외발생", e);
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code("500")
+                .message(e.getMessage())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(body);
+
+        return response;
     }
 }

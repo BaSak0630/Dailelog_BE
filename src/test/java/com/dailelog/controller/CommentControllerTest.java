@@ -9,6 +9,7 @@ import com.dailelog.repository.comment.CommentRepository;
 import com.dailelog.repository.post.PostRepository;
 import com.dailelog.repository.UserRepository;
 import com.dailelog.request.comment.CommentCreate;
+import com.dailelog.request.comment.CommentDelete;
 import com.dailelog.request.post.PostCreate;
 import com.dailelog.request.post.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +65,6 @@ class CommentControllerTest {
     }
 
     @Test
-    @DailelogMockUser
     @DisplayName("댓들 작성 ")
     void test() throws Exception {
         //given
@@ -105,5 +105,44 @@ class CommentControllerTest {
         assertNotEquals("1234",savedComment.getPassword());
         assertTrue(passwordEncoder.matches("1234",savedComment.getPassword()));
         assertEquals("댓글입니다.",savedComment.getContent());
+    }
+    @Test
+    @DisplayName("댓들 작성 ")
+    void test1() throws Exception {
+        //given
+        User user = User.builder()
+                .name("김동혁")
+                .account("daile")
+                .password("1234")
+                .email("daile@gmail.com")
+                .build();
+        userRepository.save(user);
+
+        Post post = Post.builder()
+                .title("제목")
+                .content("내용입니다.")
+                .user(user)
+                .build();
+        postRepository.save(post);
+
+        String encryptedPassword = passwordEncoder.encode("1234");
+
+        Comment comment = Comment.builder()
+                .author("동순이")
+                .password(encryptedPassword)
+                .content("댓글입니다.")
+                .build();
+
+        comment.setPost(post);
+        commentRepository.save(comment);
+
+        CommentDelete reqeust = new CommentDelete("1234");
+        String json = objectMapper.writeValueAsString(reqeust);
+
+        mockMvc.perform(post("/comments/{commentId}/delete", comment.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

@@ -2,12 +2,16 @@ package com.dailelog.service;
 
 import com.dailelog.domain.Comment;
 import com.dailelog.domain.Post;
+import com.dailelog.exception.CommentNotFound;
+import com.dailelog.exception.InvalidPassword;
 import com.dailelog.exception.PostNotFound;
 import com.dailelog.repository.comment.CommentRepository;
 import com.dailelog.repository.post.PostRepository;
 import com.dailelog.request.comment.CommentCreate;
+import com.dailelog.request.comment.CommentDelete;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +34,17 @@ public class CommentService {
                 .build();
 
         post.addComment(comment);
+    }
+
+    public void delete(Long commentId, CommentDelete request) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFound::new);
+
+        String encryptedPassword = comment.getPassword();
+
+        if (!passwordEncoder.matches(request.getPassword(), encryptedPassword)) {
+            throw new InvalidPassword();
+        }
+
+        commentRepository.delete(comment);
     }
 }
