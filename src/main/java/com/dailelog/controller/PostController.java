@@ -4,6 +4,7 @@ import com.dailelog.config.UserPrincipal;
 import com.dailelog.request.post.PostCreate;
 import com.dailelog.request.post.PostEdit;
 import com.dailelog.request.post.PostSearch;
+import com.dailelog.response.PagingResponse;
 import com.dailelog.response.PostResponse;
 import com.dailelog.service.PostService;
 import jakarta.validation.Valid;
@@ -56,8 +57,11 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getAll(@ModelAttribute PostSearch postSearch) {
+    public PagingResponse<PostResponse> getAll(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+
+        //[post, post, post] 현재는 이형태
+        //{page:1, size = 20, totalCount: 100, items: [post,post,post]} 이형태로 나중에 해야함
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

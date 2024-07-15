@@ -7,7 +7,6 @@ import com.dailelog.repository.UserRepository;
 import com.dailelog.repository.comment.CommentRepository;
 import com.dailelog.repository.post.PostRepository;
 import com.dailelog.request.comment.CommentCreate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

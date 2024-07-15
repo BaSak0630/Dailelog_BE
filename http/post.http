@@ -8,11 +8,16 @@ Content-Type: application/json
   "content": "내용입니다."
 }
 
-
 ### 게시글 삭제
 
 DELETE http://localhost:8080/posts/1
 Content-Type: application/json
+
+### 게시글 리스트 조회
+GET http://localhost:8080/posts?page=1&size=5
+Content-Type: application/json
+
+
 
 ###테스트 요청
 GET localhost:8080/foo

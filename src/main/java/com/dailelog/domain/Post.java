@@ -3,26 +3,30 @@ package com.dailelog.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     private String title;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime regDate;
 
     @ManyToOne
     @JoinColumn
     private User user;
-
-    @Lob
-    @Column
-    private String content;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
@@ -32,20 +36,22 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.regDate = LocalDateTime.now();
     }
 
-    public PostEditor.PostEditorBuilder toEditor(){
+    public PostEditor.PostEditorBuilder toEditor() {
         return PostEditor.builder()
                 .title(title)
                 .content(content);
     }
 
     public void edit(PostEditor postEditor) {
-        this.title = postEditor.getTitle();
-        this.content = postEditor.getContent();
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
     }
+
     public Long getUserId() {
-        return user.getId();
+        return this.user.getId();
     }
 
     public void addComment(Comment comment) {
@@ -53,3 +59,4 @@ public class Post {
         this.comments.add(comment);
     }
 }
+
