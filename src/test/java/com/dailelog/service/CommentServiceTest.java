@@ -58,7 +58,7 @@ public class CommentServiceTest {
                 .build();
 
         //when
-        commentService.write(user.getId(), commentCreate);
+        commentService.write(post.getId(), commentCreate);
 
         Comment comment = commentRepository.findAll().get(0);
         //then

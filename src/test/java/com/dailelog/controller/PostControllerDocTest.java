@@ -72,7 +72,9 @@ public class PostControllerDocTest {
                         responseFields(
                                 fieldWithPath("id").description("게시글 ID"),
                                 fieldWithPath("title").description("제목"),
-                                fieldWithPath("content").description("내용")
+                                fieldWithPath("content").description("내용"),
+                                fieldWithPath("regDate").description("최근 수정일"),
+                                fieldWithPath("comments").description("탯글 리스트")
                         )
                 ));
     }

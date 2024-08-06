@@ -1,5 +1,6 @@
 package com.dailelog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class Post {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    @JsonIgnore
     private List<Comment> comments;
 
     @Builder

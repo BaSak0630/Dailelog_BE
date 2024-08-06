@@ -1,5 +1,6 @@
 package com.dailelog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -30,7 +31,7 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    @JoinColumn
+    @JsonIgnore
     private Post post;
 
     @Builder

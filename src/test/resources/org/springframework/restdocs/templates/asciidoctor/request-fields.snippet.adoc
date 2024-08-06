@@ -1,4 +1,4 @@
-    |===
+|===
     |Path|Type|Description|Optional|Constraint
     {{#fields}}
     |{{path}}
@@ -6,6 +6,5 @@
     |{{description}}
     |{{#optional}}Y{{/optional}}
     |{{#constraint}}{{.}}{{/constraint}}
-
     {{/fields}}
-    |===
+===

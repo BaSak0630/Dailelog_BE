@@ -1,5 +1,6 @@
 package com.dailelog.service;
 
+import com.dailelog.domain.Comment;
 import com.dailelog.domain.Post;
 import com.dailelog.domain.PostEditor;
 import com.dailelog.exception.PostNotFound;
@@ -45,11 +46,12 @@ public class PostService {
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
-
+        //List<Comment> comments = post.getComments();
         return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .comments(post.getComments())
                 .build();
         /*
         * PostController -> WebPostService -> Repository

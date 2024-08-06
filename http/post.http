@@ -17,6 +17,15 @@ Content-Type: application/json
 GET http://localhost:8080/posts?page=1&size=5
 Content-Type: application/json
 
+### 게시글 뎃글
+POST http://localhost:8080/posts/1/comments
+Content-Type: application/json
+
+{
+  "content": "내용입니다dfdsfsdfdsfdsfsf.",
+  "author": "aaa",
+  "password": "1111"
+}
 
 
 ###테스트 요청
