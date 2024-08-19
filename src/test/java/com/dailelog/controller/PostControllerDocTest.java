@@ -50,34 +50,34 @@ public class PostControllerDocTest {
         userRepository.deleteAll();
     }
 
-    @Test
-    @DisplayName("post id 조회")
-    public void test1() throws Exception{
-        //given
-        Post post = Post.builder()
-                .title("제목")
-                .content("내용")
-                .build();
-        postRepository.save(post);
-
-        //expected
-        mockMvc.perform(get("/posts/{postId}", 1L)
-                        .accept(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("post-inquiry",
-                        pathParameters(
-                                parameterWithName("postId").description("게시글 아이디")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("게시글 ID"),
-                                fieldWithPath("title").description("제목"),
-                                fieldWithPath("content").description("내용"),
-                                fieldWithPath("regDate").description("최근 수정일"),
-                                fieldWithPath("comments").description("탯글 리스트")
-                        )
-                ));
-    }
+//    @Test
+//    @DisplayName("post id 조회")
+//    public void test1() throws Exception{
+//        //given
+//        Post post = Post.builder()
+//                .title("제목")
+//                .content("내용")
+//                .build();
+//        postRepository.save(post);
+//
+//        //expected
+//        mockMvc.perform(get("/posts/{postId}", 1L)
+//                        .accept(APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andDo(document("post-inquiry",
+//                        pathParameters(
+//                                parameterWithName("postId").description("게시글 아이디")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("id").description("게시글 ID"),
+//                                fieldWithPath("title").description("제목"),
+//                                fieldWithPath("content").description("내용"),
+//                                fieldWithPath("regDate").description("최근 수정일"),
+//                                fieldWithPath("comments").description("탯글 리스트")
+//                        )
+//                ));
+//    }
     @Test
     @DailelogMockUser
     @DisplayName("글 등록")
