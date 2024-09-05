@@ -12,5 +12,5 @@ public class DailelogApplication {
     public static void main(String[] args) {
         SpringApplication.run(DailelogApplication.class, args);
     }
-
+    //test
 }
